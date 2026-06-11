@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --text: #3A3F47;
+    --text-soft: #6B7280;
+    --text-muted: #B4BAC3;
+    --line: #ECEDEF;
+    --sun: #C98A8A;
+    --sat: #8A9DC9;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Manrope', -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #root { display: flex; justify-content: center; }
+
+  .app {
+    width: 100%;
+    max-width: 600px;
+    padding: 28px 20px 80px;
+  }
+
+  /* ---------- header ---------- */
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .cal-title-wrap { display: flex; align-items: center; gap: 6px; }
+
+  .cal-title-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: none;
+    padding: 4px 8px 4px 4px;
+    margin-left: -4px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .cal-title-btn:hover { background: rgba(0,0,0,0.04); }
+
+  .cal-title-caret {
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: transform 0.15s ease;
+  }
+  .cal-title-btn.open .cal-title-caret { transform: rotate(180deg); }
+
+  .cal-title {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .cal-year { font-weight: 500; color: var(--text-soft); }
+
+  .today-btn {
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+  .today-btn:hover { background: rgba(0,0,0,0.04); }
+
+  .cal-nav { display: flex; gap: 8px; }
+
+  .nav-btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text-soft);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .nav-btn:hover { background: #F3F4F2; color: var(--text); }
+  .nav-btn:active { background: #ECEDEA; }
+
+  .nav-btn.small { width: 36px; height: 36px; font-size: 18px; }
+
+  /* ---------- month/year jump picker ---------- */
+  .my-picker {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    padding: 14px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .my-picker-year {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .my-picker-year-label {
+    font-size: 17px;
+    font-weight: 800;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  .my-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .my-picker-month {
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-soft);
+    padding: 0;
+    min-height: 44px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+  .my-picker-month:hover { background: rgba(0,0,0,0.05); }
+
+  /* ---------- weekday row ---------- */
+  .weekday-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 6px 0;
+  }
+  .weekday.sun { color: var(--sun); }
+  .weekday.sat { color: var(--sat); }
+
+  /* ---------- date grid ---------- */
+  .date-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .date-cell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-height: 64px;
+    padding: 6px 2px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+  .density-compact .date-cell { min-height: 52px; }
+  .density-tall .date-cell { min-height: 84px; }
+
+  .date-cell:hover { background: #F6F7F5; }
+
+  .date-cell.sun .cell-day { color: var(--sun); }
+  .date-cell.sat .cell-day { color: var(--sat); }
+
+  .date-cell.out-month { background: transparent; border-color: transparent; }
+  .date-cell.out-month .cell-day { color: var(--text-muted); }
+  .date-cell.out-month.sun .cell-day,
+  .date-cell.out-month.sat .cell-day { opacity: 0.55; }
+
+  .cell-day {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .cell-emojis {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1px;
+    font-size: 13px;
+    line-height: 1.2;
+    max-width: 100%;
+  }
+  .density-tall .cell-emojis { font-size: 15px; }
+
+  .cell-more {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-soft);
+    align-self: center;
+  }
+
+  .cell-note-dot {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+
+  /* ---------- detail section ---------- */
+  .detail {
+    margin-top: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .detail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .detail-date {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .add-emoji-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid;
+    background: none;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    min-height: 40px;
+    transition: background 0.12s ease;
+  }
+  .add-emoji-btn:hover { background: rgba(0,0,0,0.03); }
+
+  .add-emoji-plus { font-size: 16px; line-height: 1; }
+
+  .emoji-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .emoji-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 18px;
+    cursor: pointer;
+    min-height: 40px;
+    transition: border-color 0.12s ease, background 0.12s ease;
+  }
+  .emoji-chip:hover { background: #F1ECEC; border-color: #E3D5D5; }
+
+  .emoji-chip-x {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+  .emoji-chip:hover .emoji-chip-x { color: var(--sun); }
+
+  .note-input {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg);
+    font: inherit;
+    font-size: 15px;
+    color: var(--text);
+    padding: 12px 14px;
+    resize: vertical;
+    min-height: 76px;
+    max-height: 240px;
+    line-height: 1.5;
+  }
+  .note-input::placeholder { color: var(--text-muted); }
+  .note-input:focus { outline: 2px solid #D8E3F0; border-color: transparent; }
+
+  /* ---------- emoji picker ---------- */
+  .emoji-picker {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--bg);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .emoji-picker-tabs {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+    overflow-x: auto;
+  }
+
+  .emoji-tabs-spacer { flex: 1; }
+
+  .emoji-tab {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    border: none;
+    background: none;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .emoji-tab:hover { background: rgba(0,0,0,0.05); }
+
+  .emoji-close { font-size: 13px; color: var(--text-soft); }
+
+  .emoji-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 2px;
+  }
+
+  .emoji-cell {
+    height: 40px;
+    border: none;
+    background: none;
+    border-radius: 10px;
+    font-size: 21px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s ease, transform 0.1s ease;
+  }
+  .emoji-cell:hover { background: rgba(0,0,0,0.05); transform: scale(1.12); }
+
+  .emoji-recents {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+  }
+
+  /* ---------- mobile ---------- */
+  @media (max-width: 480px) {
+    .app { padding: 18px 10px 60px; }
+    .cal-title { font-size: 22px; }
+    .date-grid, .weekday-row { gap: 3px; }
+    .date-cell { border-radius: 9px; min-height: 58px; }
+    .cell-emojis { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="emoji-picker.jsx"></script>
+<script type="text/babel" src="calendar-app.jsx"></script>
+</body>
+</html>
