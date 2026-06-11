@@ -67,6 +67,16 @@ export default function SettingsPanel({ settings, onChange, google }: SettingsPa
         </div>
       </div>
       <div className="settings-row">
+        <span className="settings-label">Appearance</span>
+        <Seg
+          options={['auto', 'light', 'dark'] as const}
+          value={settings.theme}
+          accent={accent}
+          labels={{ auto: 'Auto', light: 'Light', dark: 'Dark' }}
+          onPick={(v) => onChange({ theme: v })}
+        />
+      </div>
+      <div className="settings-row">
         <span className="settings-label">Weekend tint</span>
         <Seg
           options={['On', 'Off'] as const}

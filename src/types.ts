@@ -18,9 +18,11 @@ export interface MonthView {
 
 export type WeekStart = 'Sunday' | 'Monday'
 export type CellSize = 'compact' | 'regular' | 'tall'
+export type ThemeMode = 'auto' | 'light' | 'dark'
 
 export interface Settings {
   accent: string
+  theme: ThemeMode
   weekStart: WeekStart
   weekendTint: boolean
   cellSize: CellSize

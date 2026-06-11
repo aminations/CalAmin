@@ -7,7 +7,36 @@
   --line: #ECEDEF;
   --sun: #C98A8A;
   --sat: #8A9DC9;
+  --hover: rgba(0, 0, 0, 0.04);
+  --surface-hover: #F3F4F2;
+  --surface-active: #ECEDEA;
+  --cell-hover: #F6F7F5;
+  --chip-hover-bg: #F1ECEC;
+  --chip-hover-line: #E3D5D5;
+  --focus: #D8E3F0;
+  --gdot: #C9CDD3;
   --radius: 12px;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #15171C;
+  --surface: #1D2026;
+  --text: #E6E8EC;
+  --text-soft: #9AA1AC;
+  --text-muted: #5C636E;
+  --line: #2A2E36;
+  --sun: #D49A9A;
+  --sat: #97A9D4;
+  --hover: rgba(255, 255, 255, 0.06);
+  --surface-hover: #262A31;
+  --surface-active: #2C313A;
+  --cell-hover: #232730;
+  --chip-hover-bg: #2A2326;
+  --chip-hover-line: #4A3A3D;
+  --focus: #2F4A66;
+  --gdot: #5C636E;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -52,7 +81,7 @@ html, body {
   cursor: pointer;
   font-family: inherit;
 }
-.cal-title-btn:hover { background: rgba(0,0,0,0.04); }
+.cal-title-btn:hover { background: var(--hover); }
 
 .cal-title-caret {
   font-size: 14px;
@@ -80,7 +109,7 @@ html, body {
   padding: 6px 8px;
   border-radius: 8px;
 }
-.today-btn:hover { background: rgba(0,0,0,0.04); }
+.today-btn:hover { background: var(--hover); }
 
 .cal-nav { display: flex; gap: 8px; }
 
@@ -99,8 +128,8 @@ html, body {
   justify-content: center;
   transition: background 0.15s ease, color 0.15s ease;
 }
-.nav-btn:hover { background: #F3F4F2; color: var(--text); }
-.nav-btn:active { background: #ECEDEA; }
+.nav-btn:hover { background: var(--surface-hover); color: var(--text); }
+.nav-btn:active { background: var(--surface-active); }
 
 .nav-btn.small { width: 36px; height: 36px; font-size: 18px; }
 .nav-btn.gear { font-size: 18px; }
@@ -150,7 +179,7 @@ html, body {
   cursor: pointer;
   transition: background 0.12s ease;
 }
-.my-picker-month:hover { background: rgba(0,0,0,0.05); }
+.my-picker-month:hover { background: var(--hover); }
 
 /* ---------- weekday row ---------- */
 .weekday-row {
@@ -214,7 +243,7 @@ html, body {
 .density-compact .date-cell { min-height: 52px; }
 .density-tall .date-cell { min-height: 84px; }
 
-.date-cell:hover { background: #F6F7F5; }
+.date-cell:hover { background: var(--cell-hover); }
 
 .date-cell.sun .cell-day { color: var(--sun); }
 .date-cell.sat .cell-day { color: var(--sat); }
@@ -275,7 +304,7 @@ html, body {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #C9CDD3;
+  background: var(--gdot);
 }
 
 /* ---------- detail section ---------- */
@@ -314,7 +343,7 @@ html, body {
   justify-content: center;
   transition: background 0.12s ease;
 }
-.icon-btn:hover { background: rgba(0,0,0,0.04); }
+.icon-btn:hover { background: var(--hover); }
 
 .detail-date {
   font-size: 19px;
@@ -338,7 +367,7 @@ html, body {
   min-height: 40px;
   transition: background 0.12s ease;
 }
-.add-emoji-btn:hover { background: rgba(0,0,0,0.03); }
+.add-emoji-btn:hover { background: var(--hover); }
 .add-emoji-btn:disabled { opacity: 0.6; cursor: default; }
 
 .add-emoji-plus { font-size: 16px; line-height: 1; }
@@ -366,7 +395,7 @@ html, body {
   min-height: 40px;
   transition: border-color 0.12s ease, background 0.12s ease;
 }
-.emoji-chip:hover { background: #F1ECEC; border-color: #E3D5D5; }
+.emoji-chip:hover { background: var(--chip-hover-bg); border-color: var(--chip-hover-line); }
 
 .emoji-chip-x {
   font-size: 11px;
@@ -390,7 +419,7 @@ html, body {
   line-height: 1.5;
 }
 .note-input::placeholder { color: var(--text-muted); }
-.note-input:focus { outline: 2px solid #D8E3F0; border-color: transparent; }
+.note-input:focus { outline: 2px solid var(--focus); border-color: transparent; }
 
 /* ---------- google calendar overlay ---------- */
 .gcal-list {
@@ -413,7 +442,7 @@ html, body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #C9CDD3;
+  background: var(--gdot);
   flex: 0 0 auto;
 }
 
@@ -466,7 +495,7 @@ html, body {
   align-items: center;
   justify-content: center;
 }
-.emoji-tab:hover { background: rgba(0,0,0,0.05); }
+.emoji-tab:hover { background: var(--hover); }
 
 .emoji-close { font-size: 13px; color: var(--text-soft); }
 
@@ -496,7 +525,7 @@ html, body {
   justify-content: center;
   transition: background 0.1s ease, transform 0.1s ease;
 }
-.emoji-cell:hover { background: rgba(0,0,0,0.05); transform: scale(1.12); }
+.emoji-cell:hover { background: var(--hover); transform: scale(1.12); }
 
 .emoji-recents {
   display: flex;
@@ -526,7 +555,7 @@ html, body {
   padding: 4px 6px;
   border-radius: 6px;
 }
-.emoji-clear-btn:hover { background: rgba(0,0,0,0.05); }
+.emoji-clear-btn:hover { background: var(--hover); }
 
 .emoji-hint {
   font-size: 12px;
@@ -690,7 +719,7 @@ html, body {
   min-height: 36px;
   transition: background 0.12s ease, color 0.12s ease;
 }
-.seg-btn:hover { background: rgba(0,0,0,0.04); }
+.seg-btn:hover { background: var(--hover); }
 
 .settings-note {
   font-size: 12px;

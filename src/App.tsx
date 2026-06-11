@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CalendarData, DayEntry, MonthView, Settings } from './types'
 import { parseKey, todayKey } from './lib/dates'
 import { loadData, saveData } from './lib/storage'
@@ -18,6 +18,22 @@ export default function App() {
       return next
     })
   }, [])
+
+  // Apply the theme to <html> so the body background follows; track the
+  // system preference live while in auto mode.
+  useEffect(() => {
+    const mql = window.matchMedia('(prefers-color-scheme: dark)')
+    const apply = () => {
+      const dark = settings.theme === 'dark' || (settings.theme === 'auto' && mql.matches)
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+      document
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute('content', dark ? '#15171C' : '#7CA8D8')
+    }
+    apply()
+    mql.addEventListener('change', apply)
+    return () => mql.removeEventListener('change', apply)
+  }, [settings.theme])
 
   const tKey = todayKey()
   const today = parseKey(tKey)
